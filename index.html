@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+ 
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+ 
+    <body>
+        <canvas id="c1" width="600" height="600"></canvas>
+    </body>
+    <script type="text/javascript">
+        var oC = document.getElementById('c1');
+        var oGC = oC.getContext('2d');
+         
+        function drawWatch(){
+        var x = 200,y = 200,r = 100;
+        //清除上次的画布 优化性能
+        oGC.clearRect(0,0,oC.width,oC.height);
+        //日期处理 时分秒
+        var dateT=new Date();
+        var hour=dateT.getHours();
+        var min=dateT.getMinutes();
+        var sec=dateT.getSeconds();
+        //转化为弧度
+        var hourValue=(hour*30-90+min/2)*Math.PI/180;  
+        var minValue=(min*6-90)*Math.PI/180;
+        var secValue=(sec*6-90)*Math.PI/180;
+ 
+        // 表盘--每6°的刻度线
+        oGC.beginPath();
+        for(var i = 0; i < 60; i++) {
+            oGC.moveTo(x, y);
+            oGC.arc(x, y, r, 6 * i * Math.PI / 180,
+                6 * (i + 1) * Math.PI / 180);
+        };
+        oGC.closePath();
+        oGC.stroke();
+        //覆盖 最外圈刻度线
+        oGC.fillStyle = "white";
+        oGC.beginPath();
+        oGC.moveTo(x, y);
+        oGC.arc(x, y, r*19/20, 0, 360, false);
+        oGC.fill();
+        oGC.closePath();
+//      oGC.stroke();
+         
+        //时针刻度线
+        oGC.beginPath();
+        oGC.lineWidth = 3;
+        for(var i = 0; i < 12; i++) {
+            oGC.moveTo(x, y);
+            oGC.arc(x, y, r, 30 * i * Math.PI / 180, 30 * (i + 1) * Math.PI / 180);
+        };
+        oGC.closePath();
+        oGC.stroke();
+        //覆盖 时针刻度线
+        oGC.beginPath();
+        oGC.strokeStyle="white";//边框
+        oGC.arc(x,y,r*18/20,0*Math.PI,2*Math.PI,false);
+        oGC.fillStyle="white";
+        oGC.fill();
+        oGC.closePath();
+//      oGC.stroke();
+         
+        //shi针
+            oGC.lineWidth=5;
+            oGC.strokeStyle="red";
+            oGC.beginPath();
+            oGC.moveTo(x,y);
+            oGC.arc(x,y,r*0.5,hourValue,hourValue,false);
+            oGC.closePath();
+            oGC.stroke();
+        //  fen针
+            oGC.lineWidth=3;
+            oGC.strokeStyle="orange";
+            oGC.beginPath();
+            oGC.moveTo(x,y);
+            oGC.arc(x,y,r*0.7,minValue,
+                minValue,false);
+            oGC.closePath();
+            oGC.stroke();
+            //  秒针
+            oGC.lineWidth=2;
+            oGC.strokeStyle="black";
+            oGC.beginPath();
+            oGC.moveTo(x,y);
+            oGC.arc(x,y,r*0.9,secValue,
+                secValue,false);
+            oGC.closePath();
+            oGC.stroke();
+        }
+        drawWatch();
+        setInterval(drawWatch,1000);
+    </script>
+ 
+</html>
